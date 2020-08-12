@@ -18,24 +18,23 @@ public class Boat {
         boat.y = -850;
         boat.width = 221;
         boat.height = 175;
-
     }
 
     public void boatMovement() {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            boat.x -= 500 * Gdx.graphics.getDeltaTime();
+            boat.x -= Constants.BOAT_SPEED * Gdx.graphics.getDeltaTime();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            boat.x += 500 * Gdx.graphics.getDeltaTime();
+            boat.x += Constants.BOAT_SPEED * Gdx.graphics.getDeltaTime();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            boat.y += 500 * Gdx.graphics.getDeltaTime();
+            boat.y += Constants.BOAT_SPEED * Gdx.graphics.getDeltaTime();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            boat.y -= 500 * Gdx.graphics.getDeltaTime();
+            boat.y -= Constants.BOAT_SPEED * Gdx.graphics.getDeltaTime();
         }
 
         if (boat.x < -Constants.WORLD_WIDTH) {

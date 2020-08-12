@@ -7,9 +7,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import org.academiadecodigo.gitbusters.programazores.boats.Boat;
+import org.academiadecodigo.gitbusters.programazores.boats.PirateBoat;
 import org.academiadecodigo.gitbusters.programazores.enimies.Octopussy;
 import org.academiadecodigo.gitbusters.programazores.land.Island;
+
+import java.util.Iterator;
 
 public class WestSideAdventure extends ApplicationAdapter {
 
@@ -18,13 +25,15 @@ public class WestSideAdventure extends ApplicationAdapter {
     private Boat boat;
     private Island island;
 
-    private Octopussy octopussy;
-
     private int health;
-    private String healthText;
-    private BitmapFont font;
 
     private OrthographicCamera camera;
+
+    private Array<Octopussy> octopussyArray;
+    private long lastOctopussy;
+
+    private Array<PirateBoat> pirateBoatArray;
+    private long lastPirateBoat;
 
     @Override
     public void create() {
@@ -34,21 +43,18 @@ public class WestSideAdventure extends ApplicationAdapter {
         boat = new Boat();
         boat.setBoatImage(new Texture("boat_green.png"));
 
-        octopussy = new Octopussy();
-        octopussy.setOctopussyImage(new Texture("octopussy.png"));
-
         island = new Island();
         island.setDepartureIslandImage(new Texture("island.png"));
 
-        health = 200;
-        healthText = "Health: 3";
-        font = new BitmapFont();
+        health = 3;
 
         // WORLD_WIDTH = 3600
         // WORLD_HEIGTH = 2160
         camera = new OrthographicCamera(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
         //Viewport viewport = new ExtendViewport(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT, camera);
 
+        octopussyArray = new Array<>();
+        pirateBoatArray = new Array<>();
     }
 
     @Override
@@ -64,29 +70,42 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         camera.position.set(boat.getBoat().getX(), boat.getBoat().getY(), 0);
         drawImages();
-        viewHealth();
+
+        for (Octopussy o : octopussyArray) {
+            batch.draw(o.getOctopussyImage(), o.getOctopussy().x, o.getOctopussy().y);
+        }
+
+        for (PirateBoat pirateBoat : pirateBoatArray) {
+            batch.draw(pirateBoat.getPirateImage(), pirateBoat.getPirateBoat().x, pirateBoat.getPirateBoat().y);
+        }
 
         batch.end();
 
-        octopussy.octopussyMovement();
-
-        if (boat.getBoat().overlaps(octopussy.getOctopussy())) {
-            health--;
-            healthText = "Health: " + health;
-            dispose();
-            create();   // test
-            System.out.println("Crashedddddd");
+        if (TimeUtils.nanoTime() - lastOctopussy > 4000000000L) {
+            spawnOctopussies();
         }
+
+        if (TimeUtils.nanoTime() - lastPirateBoat > 6000000000L) {
+            spawnPirateBoats();
+        }
+
+        octopussyCollisionsHandler();
+        piratesCollisionsHandler();
+
 
         switch (health) {
             case 0:
                 System.out.println("GAME OVER BROTHER....");
-               dispose();
+                dispose();
                 create();
-            case 50:
-                boat.setBoatImage(new Texture("boat_yellow.png"));
-            case 25:
+                boat.setBoatImage(new Texture("boat_green.png"));
+                break;
+            case 1:
                 boat.setBoatImage(new Texture("boat_red.png"));
+                break;
+            case 2:
+                boat.setBoatImage(new Texture("boat_yellow.png"));
+                break;
         }
 
     }
@@ -96,17 +115,67 @@ public class WestSideAdventure extends ApplicationAdapter {
         batch.dispose();
     }
 
-    public void drawImages() {
+    private void drawImages() {
         batch.draw(boat.getBoatImage(), boat.getBoat().getX(), boat.getBoat().y);
         batch.draw(island.getDepartureIslandImage(), island.getDepartureIsland().x, island.getDepartureIsland().y);
-        batch.draw(octopussy.getOctopussyImage(), octopussy.getOctopussy().x, octopussy.getOctopussy().y);
     }
 
-    public void viewHealth() {
-        font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        font.draw(batch, healthText, 20, 700);
-        font.getData().setScale(5f, 5f);
+    private void spawnOctopussies() {
+        Octopussy octo = new Octopussy();
+        octo.setOctopussyImage(new Texture("octopussy.png"));
 
+        octo.getOctopussy().x = MathUtils.random(-1500, 1500);
+        octo.getOctopussy().y = MathUtils.random(-1500, 1500);
+
+        octopussyArray.add(octo);
+        lastOctopussy = TimeUtils.nanoTime();
     }
 
+    private void spawnPirateBoats() {
+
+        PirateBoat pirateBoat = new PirateBoat();
+        pirateBoat.setPirateImage(new Texture("pirateboat.png"));
+
+        pirateBoat.getPirateBoat().x = MathUtils.random(-1500, 1500);
+        pirateBoat.getPirateBoat().y = MathUtils.random(-1500, 1500);
+
+        pirateBoatArray.add(pirateBoat);
+        lastPirateBoat = TimeUtils.nanoTime();
+    }
+
+    private void octopussyCollisionsHandler() {
+
+        for (Iterator<Octopussy> iter = octopussyArray.iterator(); iter.hasNext(); ) {
+            Octopussy octopussy = iter.next();
+            octopussy.octopussyMovement();
+
+            if (octopussy.getOctopussy().y > Constants.WORLD_HEIGHT) {
+                iter.remove();
+            }
+
+            if (boat.getBoat().overlaps(octopussy.getOctopussy())) {
+                health--;
+                iter.remove();
+                System.out.println("Crashed into an octopussy");
+            }
+        }
+    }
+
+    private void piratesCollisionsHandler() {
+
+        for (Iterator<PirateBoat> iter = pirateBoatArray.iterator(); iter.hasNext(); ) {
+            PirateBoat pirateBoat = iter.next();
+            pirateBoat.pirateMovement();
+
+            if (pirateBoat.getPirateBoat().y > Constants.WORLD_HEIGHT) {
+                iter.remove();
+            }
+
+            if (boat.getBoat().overlaps(pirateBoat.getPirateBoat())) {
+                health--;
+                iter.remove();
+                System.out.println("Crashed into a pirate boat");
+            }
+        }
+    }
 }

@@ -20,7 +20,7 @@ public class Octopussy {
     }
 
     public void octopussyMovement() {
-        octopussy.x -= Constants.BOAT_SPEED * Gdx.graphics.getDeltaTime();
+        octopussy.y -= Constants.OCTOPUSSY_SPEED * Gdx.graphics.getDeltaTime();
     }
 
     public Rectangle getOctopussy() {
