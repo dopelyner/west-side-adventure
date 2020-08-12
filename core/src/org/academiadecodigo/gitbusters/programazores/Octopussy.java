@@ -8,28 +8,19 @@ public class Octopussy {
 
     private Texture octopussyImage;
     private Rectangle octopussy;
-    private final int speed = 300;
+    public static final int SPEED = 300;
 
     public Octopussy() {
         octopussy = new Rectangle();
-        octopussy.x = 500;
-        octopussy.y = 50;
+        octopussy.x = 700;
+        octopussy.y = 120;
         octopussy.width = 50;
         octopussy.height = 50;
     }
 
     public void octopussyMovement() {
 
-            octopussy.y += speed * Gdx.graphics.getDeltaTime();
-
-            if (octopussy.y < 0) {
-                octopussy.y += speed * Gdx.graphics.getDeltaTime();
-            }
-
-            if (octopussy.y > 720 - 2 * octopussy.getWidth()) {
-                octopussy.y -= speed * Gdx.graphics.getDeltaTime();
-            }
-
+        octopussy.x -= SPEED * Gdx.graphics.getDeltaTime();
 
     }
 
