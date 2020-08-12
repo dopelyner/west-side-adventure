@@ -1,14 +1,15 @@
-package org.academiadecodigo.gitbusters.programazores;
+package org.academiadecodigo.gitbusters.programazores.enimies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import org.academiadecodigo.gitbusters.programazores.Constants;
 
 public class Octopussy {
 
     private Texture octopussyImage;
     private Rectangle octopussy;
-    public static final int SPEED = 300;
+
 
     public Octopussy() {
         octopussy = new Rectangle();
@@ -19,9 +20,7 @@ public class Octopussy {
     }
 
     public void octopussyMovement() {
-
-        octopussy.x -= SPEED * Gdx.graphics.getDeltaTime();
-
+        octopussy.x -= Constants.BOAT_SPEED * Gdx.graphics.getDeltaTime();
     }
 
     public Rectangle getOctopussy() {

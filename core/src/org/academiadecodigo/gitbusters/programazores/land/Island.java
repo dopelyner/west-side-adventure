@@ -1,4 +1,4 @@
-package org.academiadecodigo.gitbusters.programazores;
+package org.academiadecodigo.gitbusters.programazores.land;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,8 +10,8 @@ public class Island {
 
     public Island(){
         departureIsland = new Rectangle();
-        departureIsland.x = 0;
-        departureIsland.y = 0;
+        departureIsland.x = -1500;
+        departureIsland.y = -1000;
     }
 
     public Rectangle getDepartureIsland() {

@@ -1,9 +1,10 @@
-package org.academiadecodigo.gitbusters.programazores;
+package org.academiadecodigo.gitbusters.programazores.boats;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import org.academiadecodigo.gitbusters.programazores.Constants;
 
 
 public class Boat {
@@ -13,10 +14,10 @@ public class Boat {
 
     public Boat() {
         boat = new Rectangle();
-        boat.x = 500;
-        boat.y = 50;
-        boat.width = 50;
-        boat.height = 50;
+        boat.x = -1200;
+        boat.y = -850;
+        boat.width = 221;
+        boat.height = 175;
 
     }
 
@@ -32,15 +33,21 @@ public class Boat {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             boat.y += 500 * Gdx.graphics.getDeltaTime();
         }
+
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             boat.y -= 500 * Gdx.graphics.getDeltaTime();
         }
 
-        if (boat.x < 0) {
-            boat.x = 0;
+        if (boat.x < -Constants.WORLD_WIDTH) {
+            boat.x = -Constants.WORLD_WIDTH;
         }
-        if (boat.x > 1200 - 2 * boat.getWidth()) {
-            boat.x = 1200 - 2 * boat.getWidth();
+
+        if (boat.y > Constants.WORLD_HEIGHT - boat.height) {
+            boat.y = Constants.WORLD_HEIGHT - boat.height;
+        }
+
+        if (boat.y < -Constants.WORLD_WIDTH) {
+            boat.y = -Constants.WORLD_WIDTH;
         }
 
     }
@@ -56,4 +63,5 @@ public class Boat {
     public void setBoatImage(Texture boatImage) {
         this.boatImage = boatImage;
     }
+
 }
