@@ -25,8 +25,9 @@ import java.util.Iterator;
 
 public class WestSideAdventure extends ApplicationAdapter {
 
+
     enum Screen {
-        MAIN_MENU, GAME, GAME_OVER, MISSION_COMPLETE
+        MAIN_MENU, GAME, GAME_OVER, LORE, CREDITS, MISSION_COMPLETE;
     }
 
     private Stage stage;
@@ -34,7 +35,11 @@ public class WestSideAdventure extends ApplicationAdapter {
     private Skin skinMenu;
     private Stage stageOver;
     private Skin skinOver;
-    private Screen currentScreen = Screen.MAIN_MENU;
+    private Stage stageLore;
+    private Stage stageCredits;
+
+    Screen currentScreen = Screen.MAIN_MENU;
+
     private SpriteBatch batch;
     private Boat boat;
     private Island puertoRico;
@@ -90,6 +95,14 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         if (currentScreen == Screen.MISSION_COMPLETE) {
             completeMission();
+        }
+
+        if (currentScreen == Screen.LORE) {
+            createLore();
+        }
+
+        if (currentScreen == Screen.CREDITS) {
+            createCredits();
         }
 
     }
@@ -188,6 +201,22 @@ public class WestSideAdventure extends ApplicationAdapter {
         }
         System.out.println(america.getIsland().getHeight());
 
+        if (currentScreen == Screen.LORE) {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            stageLore.act();
+            stageLore.draw();
+        }
+
+        if (currentScreen == Screen.CREDITS) {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            stageCredits.act();
+            stageCredits.draw();
+        }
+
     }
 
     @Override
@@ -241,7 +270,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         Wave wave = new Wave();
         wave.setWaveImage(new Texture("waves.png"));
 
-        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH-300, Constants.WORLD_WIDTH - 70);
+        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH - 300, Constants.WORLD_WIDTH - 70);
         wave.getWave().y = MathUtils.random(-Constants.WORLD_HEIGHT, Constants.WORLD_HEIGHT);
 
         waveArray.add(wave);
@@ -306,7 +335,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         stageMenu = new Stage();
         Gdx.input.setInputProcessor(stageMenu); // Make the stage consume events
 
-
         Table table = new Table();
         table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("background-menu.png"))));
         table.setFillParent(true);
@@ -316,7 +344,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         Drawable play = new TextureRegionDrawable(new TextureRegion(new Texture("play-button.png")));
         ImageButton playGameBtn = new ImageButton(play);
-        playGameBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8 + 20 + 100);
+        playGameBtn.setPosition(Gdx.graphics.getWidth() / 2 - 250, Gdx.graphics.getWidth() / 8 + 20 + 100);
         playGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -326,18 +354,8 @@ public class WestSideAdventure extends ApplicationAdapter {
         });
         stageMenu.addActor(playGameBtn);
 
-        Drawable instructions = new TextureRegionDrawable(new TextureRegion(new Texture("instructions-button.png")));
-        ImageButton instructionsBtn = new ImageButton(instructions);
-        instructionsBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8 - 120);
-        instructionsBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Instructions button clicked");
-            }
-        });
-        stageMenu.addActor(instructionsBtn);
 
-        Drawable settings = new TextureRegionDrawable(new TextureRegion(new Texture("settings-button.png")));
+        Drawable settings = new TextureRegionDrawable(new TextureRegion(new Texture("instructions-button.png")));
         ImageButton settingsBtn = new ImageButton(settings);
         settingsBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 - 3);
         settingsBtn.addListener(new ClickListener() {
@@ -355,17 +373,22 @@ public class WestSideAdventure extends ApplicationAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Lore button clicked");
+                currentScreen = Screen.LORE;
+                dispose();
+                create();
             }
         });
         stageMenu.addActor(loreBtn);
 
-        Drawable shop = new TextureRegionDrawable(new TextureRegion(new Texture("exit-button.png")));
+        Drawable shop = new TextureRegionDrawable(new TextureRegion(new Texture("creditsbtn.png")));
         ImageButton shopBtn = new ImageButton(shop);
-        shopBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 + 20 + 100);
+        shopBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8 - 120);
         shopBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                currentScreen = Screen.GAME;
+                currentScreen = Screen.CREDITS;
+                dispose();
+                create();
             }
         });
         stageMenu.addActor(shopBtn);
@@ -384,7 +407,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         stageMenu.addActor(exitBtn);
 
     }
-
 
     private void createGameOver() {
         int buttonOffset = 20;
@@ -425,7 +447,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
     }
 
-    private void completeMission(){
+    private void completeMission() {
         int buttonOffset = 20;
 
         stage = new Stage();
@@ -460,6 +482,63 @@ public class WestSideAdventure extends ApplicationAdapter {
             }
         });
         stage.addActor(quitBtn);
+    }
+
+    private void createLore() {
+        int buttonOffset = 20;
+
+        stageLore = new Stage();
+        Gdx.input.setInputProcessor(stageLore); // Make the stage consume events
+
+        Table table = new Table();
+        table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("lore-c.png"))));
+        table.setFillParent(true);
+        table.setDebug(true);
+        stageLore.addActor(table);
+
+
+        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("back.png")));
+        ImageButton tryAgainBtn = new ImageButton(tryAgain);
+        tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 620, Gdx.graphics.getWidth() / 8 - 120);
+        tryAgainBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Lore button clicked");
+                currentScreen = Screen.MAIN_MENU;
+                dispose();
+                create();
+            }
+        });
+        stageLore.addActor(tryAgainBtn);
+    }
+
+    private void createCredits() {
+        int buttonOffset = 20;
+
+        stageCredits = new Stage();
+        Gdx.input.setInputProcessor(stageCredits); // Make the stage consume events
+
+
+        Table table = new Table();
+        table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("credits-c.png"))));
+        table.setFillParent(true);
+        table.setDebug(true);
+        stageCredits.addActor(table);
+
+
+        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("back.png")));
+        ImageButton tryAgainBtn = new ImageButton(tryAgain);
+        tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 650, Gdx.graphics.getWidth() / 8 - 120);
+        tryAgainBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Go button clicked");
+                currentScreen = Screen.MAIN_MENU;
+                dispose();
+                create();
+            }
+        });
+        stageCredits.addActor(tryAgainBtn);
     }
 
 }
