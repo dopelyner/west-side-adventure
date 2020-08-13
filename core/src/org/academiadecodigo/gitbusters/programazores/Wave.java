@@ -30,6 +30,6 @@ public class Wave {
     }
 
     public void waveMovement(){
-        wave.x -= 20 * Gdx.graphics.getDeltaTime();
+        wave.x -= 150 * Gdx.graphics.getDeltaTime();
     }
 }

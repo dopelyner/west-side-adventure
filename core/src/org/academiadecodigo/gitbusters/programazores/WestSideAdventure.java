@@ -27,7 +27,7 @@ import java.util.concurrent.CompletionService;
 
 public class WestSideAdventure extends ApplicationAdapter {
 
-    enum Screen{
+    enum Screen {
         MAIN_MENU, GAME, GAME_OVER;
     }
 
@@ -42,7 +42,9 @@ public class WestSideAdventure extends ApplicationAdapter {
     private SpriteBatch batch;
 
     private Boat boat;
+
     private Island puertoRico;
+    private Island america;
 
     private int health;
 
@@ -64,13 +66,15 @@ public class WestSideAdventure extends ApplicationAdapter {
 
     @Override
     public void create() {
-
         batch = new SpriteBatch();
+
         puertoRico = new Island(Constants.PUERTO_RICO_SPAWN_X, Constants.PUERTO_RICO_SPAWN_Y);
         puertoRico.setIslandImage(new Texture("puerto-rico.png"));
+
         boat = new Boat();
         boat.setBoatImage(new Texture("boat_green.png"));
-
+        america = new Island(Constants.AMERICA_SPAWN_X, Constants.AMERICA_SPAWN_Y);
+        america.setIslandImage(new Texture("america.png"));
 
         health = 3;
 
@@ -87,11 +91,11 @@ public class WestSideAdventure extends ApplicationAdapter {
         //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
 
 
-        if(currentScreen == Screen.MAIN_MENU) {
+        if (currentScreen == Screen.MAIN_MENU) {
             createMenu();
         }
 
-        if(currentScreen == Screen.GAME_OVER) {
+        if (currentScreen == Screen.GAME_OVER) {
             createGameOver();
         }
 
@@ -101,8 +105,8 @@ public class WestSideAdventure extends ApplicationAdapter {
     @Override
     public void render() {
 
-        if(currentScreen == Screen.GAME) {
-            Gdx.gl.glClearColor(0, 109/255.0f, 190/255.0f, 1);
+        if (currentScreen == Screen.GAME) {
+            Gdx.gl.glClearColor(0, 109 / 255.0f, 190 / 255.0f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.setProjectionMatrix(camera.combined);
@@ -155,16 +159,16 @@ public class WestSideAdventure extends ApplicationAdapter {
                     break;
             }
 
-//        System.out.println(boat.getBoat().x);
-//        System.out.println(boat.getBoat().y);
+        System.out.println(boat.getBoat().x);
+        System.out.println(boat.getBoat().y);
 
-            if(progress > 0 && boat.getBoat().getX() > Constants.WORLD_WIDTH - 500) {
+            if (progress > 0 && boat.getBoat().getX() > Constants.WORLD_WIDTH - 500) {
                 progress -= 25;
             } // push final
 
         }
 
-        if(currentScreen == Screen.MAIN_MENU) {
+        if (currentScreen == Screen.MAIN_MENU) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -172,7 +176,7 @@ public class WestSideAdventure extends ApplicationAdapter {
             stageMenu.draw();
         }
 
-        if(currentScreen == Screen.GAME_OVER) {
+        if (currentScreen == Screen.GAME_OVER) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -191,6 +195,7 @@ public class WestSideAdventure extends ApplicationAdapter {
     private void drawImages() {
         batch.draw(puertoRico.getIslandImage(), puertoRico.getIsland().x, puertoRico.getIsland().y);
         batch.draw(boat.getBoatImage(), boat.getBoat().getX(), boat.getBoat().y);
+        batch.draw(america.getIslandImage(), america.getIsland().x, america.getIsland().y);
 
         for (Octopussy o : octopussyArray) {
             batch.draw(o.getOctopussyImage(), o.getOctopussy().x, o.getOctopussy().y);
@@ -201,7 +206,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         }
 
         for (Wave wave : waveArray) {
-            batch.draw(wave.getWaveImage(), wave.getWave().x,  wave.getWave().y);
+            batch.draw(wave.getWaveImage(), wave.getWave().x, wave.getWave().y);
         }
     }
 
@@ -209,8 +214,8 @@ public class WestSideAdventure extends ApplicationAdapter {
         Octopussy octo = new Octopussy();
         octo.setOctopussyImage(new Texture("octopussy.png"));
 
-        octo.getOctopussy().x = MathUtils.random(boat.getBoat().getX() -150);
-        octo.getOctopussy().y = MathUtils.random(0,boat.getBoat().getY() + 500);
+        octo.getOctopussy().x = MathUtils.random(boat.getBoat().getX() - 150);
+        octo.getOctopussy().y = MathUtils.random(0, boat.getBoat().getY() + 500);
 
         octopussyArray.add(octo);
         lastOctopussy = TimeUtils.nanoTime();
@@ -222,13 +227,13 @@ public class WestSideAdventure extends ApplicationAdapter {
         pirateBoat.setPirateImage(new Texture("pirateboat.png"));
 
         pirateBoat.getPirateBoat().x = MathUtils.random(Constants.WORLD_WIDTH);
-        pirateBoat.getPirateBoat().y = MathUtils.random(2160-1000,2160);
+        pirateBoat.getPirateBoat().y = MathUtils.random(2160 - 1000, 2160);
 
         pirateBoatArray.add(pirateBoat);
         lastPirateBoat = TimeUtils.nanoTime();
     }
 
-    private void spawnWaves(){
+    private void spawnWaves() {
         Wave wave = new Wave();
         wave.setWaveImage(new Texture("waves.png"));
 
@@ -239,7 +244,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         lastPirateBoat = TimeUtils.nanoTime();
     }
 
-    private void deleteWaves(){
+    private void deleteWaves() {
         for (Iterator<Wave> iter = waveArray.iterator(); iter.hasNext(); ) {
             Wave wave = iter.next();
             wave.waveMovement();
@@ -291,7 +296,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         }
     }
 
-    private void createMenu(){
+    private void createMenu() {
         int buttonOffset = 20;
 
         stageMenu = new Stage();
@@ -377,8 +382,7 @@ public class WestSideAdventure extends ApplicationAdapter {
     }
 
 
-
-    private void createGameOver(){
+    private void createGameOver() {
         int buttonOffset = 20;
 
         stageOver = new Stage();
