@@ -71,7 +71,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         batch.begin();
 
-        camera.position.set(boat.getBoat().getX(), boat.getBoat().getY(), 0);
+        camera.position.set(boat.getBoat().getX() + 1350, boat.getBoat().getY(), 0);
         drawImages();
 
         //backgroundMusic.isLooping();

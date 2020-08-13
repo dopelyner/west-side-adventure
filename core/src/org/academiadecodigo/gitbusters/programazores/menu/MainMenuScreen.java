@@ -23,6 +23,7 @@ public class MainMenuScreen extends ApplicationAdapter {
     private Skin skin;
     private Label outputLabel;
 
+
     @Override
     public void create() {
 
@@ -42,7 +43,7 @@ public class MainMenuScreen extends ApplicationAdapter {
 
         Drawable play = new TextureRegionDrawable(new TextureRegion(new Texture("play-button.png")));
         ImageButton playGameBtn = new ImageButton(play);
-        playGameBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8 + 20 + 100);
+        playGameBtn.setPosition(Gdx.graphics.getWidth() / 2 -370, Gdx.graphics.getWidth() / 8 + 120);
         playGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -54,7 +55,7 @@ public class MainMenuScreen extends ApplicationAdapter {
 
         Drawable instructions = new TextureRegionDrawable(new TextureRegion(new Texture("instructions-button.png")));
         ImageButton instructionsBtn = new ImageButton(instructions);
-        instructionsBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8 - 120);
+        instructionsBtn.setPosition(Gdx.graphics.getWidth() / 2 - 370, Gdx.graphics.getWidth() / 8 - 120);
         instructionsBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -65,7 +66,7 @@ public class MainMenuScreen extends ApplicationAdapter {
 
         Drawable settings = new TextureRegionDrawable(new TextureRegion(new Texture("settings-button.png")));
         ImageButton settingsBtn = new ImageButton(settings);
-        settingsBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 - 3);
+        settingsBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 );
         settingsBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -76,7 +77,7 @@ public class MainMenuScreen extends ApplicationAdapter {
 
         Drawable lore = new TextureRegionDrawable(new TextureRegion(new Texture("lore-button.png")));
         ImageButton loreBtn = new ImageButton(lore);
-        loreBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8);
+        loreBtn.setPosition(Gdx.graphics.getWidth() / 2 - 370, Gdx.graphics.getWidth() / 8);
         loreBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -87,7 +88,7 @@ public class MainMenuScreen extends ApplicationAdapter {
 
         Drawable shop = new TextureRegionDrawable(new TextureRegion(new Texture("shop-button.png")));
         ImageButton shopBtn = new ImageButton(shop);
-        shopBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 + 20 + 100);
+        shopBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 8 + 180);
         shopBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
