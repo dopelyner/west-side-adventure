@@ -4,12 +4,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -24,7 +22,6 @@ import org.academiadecodigo.gitbusters.programazores.enimies.Octopussy;
 import org.academiadecodigo.gitbusters.programazores.land.Island;
 
 import java.util.Iterator;
-import java.util.concurrent.CompletionService;
 
 public class WestSideAdventure extends ApplicationAdapter {
 
@@ -244,7 +241,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         Wave wave = new Wave();
         wave.setWaveImage(new Texture("waves.png"));
 
-        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH, Constants.WORLD_WIDTH - 70);
+        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH-300, Constants.WORLD_WIDTH - 70);
         wave.getWave().y = MathUtils.random(-Constants.WORLD_HEIGHT, Constants.WORLD_HEIGHT);
 
         waveArray.add(wave);
