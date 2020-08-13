@@ -3,7 +3,6 @@ package org.academiadecodigo.gitbusters.programazores.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.academiadecodigo.gitbusters.programazores.WestSideAdventure;
-import org.academiadecodigo.gitbusters.programazores.menu.MainMenuScreen;
 
 public class DesktopLauncher {
 
@@ -15,7 +14,6 @@ public class DesktopLauncher {
 		config.width = WIDTH;
 		config.height = HEIGHT;
 		config.title = "West Side Adventure";
-		//new LwjglApplication(new WestSideAdventure(), config);
-		new LwjglApplication(new MainMenuScreen(), config);
+		new LwjglApplication(new WestSideAdventure(), config);
 	}
 }
