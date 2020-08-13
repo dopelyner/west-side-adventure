@@ -54,6 +54,9 @@ public class WestSideAdventure extends ApplicationAdapter {
     private Array<PirateBoat> pirateBoatArray;
     private long lastPirateBoat;
 
+    private Array<Wave> waveArray;
+    private long lastWave;
+
     private Music backgroundMusic;
     private int progress;
     private ShapeRenderer shapeRenderer;
@@ -68,6 +71,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         boat = new Boat();
         boat.setBoatImage(new Texture("boat_green.png"));
 
+
         health = 3;
 
         camera = new OrthographicCamera(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
@@ -75,6 +79,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         octopussyArray = new Array<>();
         pirateBoatArray = new Array<>();
+        waveArray = new Array<>();
 
         progress = 1320;
 
@@ -89,8 +94,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         if(currentScreen == Screen.GAME_OVER) {
             createGameOver();
         }
-
-
 
     }
 
@@ -128,9 +131,13 @@ public class WestSideAdventure extends ApplicationAdapter {
             if (TimeUtils.nanoTime() - lastPirateBoat > 4000000000L) {
                 spawnPirateBoats();
             }
+            if (TimeUtils.nanoTime() - lastWave > 1000000) {
+                spawnWaves();
+            }
 
             octopussyCollisionsHandler();
             piratesCollisionsHandler();
+            deleteWaves();
 
             switch (health) {
                 case 0:
@@ -192,6 +199,10 @@ public class WestSideAdventure extends ApplicationAdapter {
         for (PirateBoat pirateBoat : pirateBoatArray) {
             batch.draw(pirateBoat.getPirateImage(), pirateBoat.getPirateBoat().x, pirateBoat.getPirateBoat().y);
         }
+
+        for (Wave wave : waveArray) {
+            batch.draw(wave.getWaveImage(), wave.getWave().x,  wave.getWave().y);
+        }
     }
 
     private void spawnOctopussies() {
@@ -215,6 +226,33 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         pirateBoatArray.add(pirateBoat);
         lastPirateBoat = TimeUtils.nanoTime();
+    }
+
+    private void spawnWaves(){
+        Wave wave = new Wave();
+        wave.setWaveImage(new Texture("waves.png"));
+
+        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH, Constants.WORLD_WIDTH);
+        wave.getWave().y = MathUtils.random(-Constants.WORLD_HEIGHT, Constants.WORLD_HEIGHT);
+
+        waveArray.add(wave);
+        lastPirateBoat = TimeUtils.nanoTime();
+    }
+
+    private void deleteWaves(){
+        for (Iterator<Wave> iter = waveArray.iterator(); iter.hasNext(); ) {
+            Wave wave = iter.next();
+            wave.waveMovement();
+
+            if (wave.getWave().x < -Constants.WORLD_HEIGHT + 200) {
+                wave.getWaveImage().dispose();
+                iter.remove();
+            }
+
+            if (boat.getBoat().overlaps(wave.getWave())) {
+                iter.remove();
+            }
+        }
     }
 
     private void octopussyCollisionsHandler() {
