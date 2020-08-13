@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 public class WestSideAdventure extends ApplicationAdapter {
 
-    public SpriteBatch batch;
+    private SpriteBatch batch;
 
     private Boat boat;
     private Island puertoRico;
