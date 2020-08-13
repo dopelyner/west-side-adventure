@@ -571,9 +571,9 @@ public class WestSideAdventure extends ApplicationAdapter {
         stageIns.addActor(table);
 
 
-        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("back.png")));
+        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("back-r.png")));
         ImageButton tryAgainBtn = new ImageButton(tryAgain);
-        tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 650, Gdx.graphics.getWidth() / 8 - 120);
+        tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 605, Gdx.graphics.getWidth() / 8 - 120);
         tryAgainBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -600,9 +600,9 @@ public class WestSideAdventure extends ApplicationAdapter {
         stageIns.addActor(table);
 
 
-        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("back.png")));
+        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("back-r.png")));
         ImageButton tryAgainBtn = new ImageButton(tryAgain);
-        tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 650, Gdx.graphics.getWidth() / 8 - 120);
+        tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 605, Gdx.graphics.getWidth() / 8 - 120);
         tryAgainBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
