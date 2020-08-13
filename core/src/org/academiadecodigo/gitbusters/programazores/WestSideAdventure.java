@@ -14,12 +14,13 @@ import org.academiadecodigo.gitbusters.programazores.boats.Boat;
 import org.academiadecodigo.gitbusters.programazores.boats.PirateBoat;
 import org.academiadecodigo.gitbusters.programazores.enimies.Octopussy;
 import org.academiadecodigo.gitbusters.programazores.land.Island;
+import org.academiadecodigo.gitbusters.programazores.menu.MainMenuScreen;
 
 import java.util.Iterator;
 
 public class WestSideAdventure extends ApplicationAdapter {
 
-    private SpriteBatch batch;
+    public SpriteBatch batch;
 
     private Boat boat;
     private Island puertoRico;
@@ -36,12 +37,12 @@ public class WestSideAdventure extends ApplicationAdapter {
 
     private Music backgroundMusic;
 
-
     @Override
     public void create() {
 
         batch = new SpriteBatch();
-        puertoRico = new Island();
+
+        puertoRico = new Island(Constants.PUERTO_RICO_SPAWN_X, Constants.PUERTO_RICO_SPAWN_Y);
         puertoRico.setIslandImage(new Texture("puerto-rico.png"));
         boat = new Boat();
         boat.setBoatImage(new Texture("boat_green.png"));
@@ -55,13 +56,13 @@ public class WestSideAdventure extends ApplicationAdapter {
         pirateBoatArray = new Array<>();
 
         //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BrosdasCaraibas_8bit.mp3"));
-        //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
+        // backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
 
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0, 109/255.0f, 190/255.0f, 1);
+        Gdx.gl.glClearColor(0, 109 / 255.0f, 190 / 255.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update(); //update our camera every frame
@@ -104,8 +105,6 @@ public class WestSideAdventure extends ApplicationAdapter {
                 break;
         }
 
-        System.out.println(boat.getBoat().x);
-        System.out.println(boat.getBoat().y);
     }
 
     @Override
@@ -184,5 +183,9 @@ public class WestSideAdventure extends ApplicationAdapter {
                 System.out.println("Crashed into a pirate boat");
             }
         }
+    }
+
+    public SpriteBatch getBatch() {
+        return batch;
     }
 }

@@ -2,17 +2,16 @@ package org.academiadecodigo.gitbusters.programazores.land;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import org.academiadecodigo.gitbusters.programazores.Constants;
 
 public class Island {
 
     private Texture islandImage;
     private Rectangle island;
 
-    public Island(){
+    public Island(int x, int y){
         island = new Rectangle();
-        island.x = -Constants.WORLD_WIDTH;
-        island.y = 1175;
+        island.x = x;
+        island.y = y;
     }
 
     public Rectangle getIsland() {
