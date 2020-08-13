@@ -10,7 +10,6 @@ public class Octopussy {
     private Texture octopussyImage;
     private Rectangle octopussy;
 
-
     public Octopussy() {
         octopussy = new Rectangle();
         octopussy.x = 700;

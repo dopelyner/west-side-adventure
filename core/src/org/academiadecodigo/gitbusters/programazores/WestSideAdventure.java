@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -28,41 +29,30 @@ import java.util.concurrent.CompletionService;
 public class WestSideAdventure extends ApplicationAdapter {
 
     enum Screen {
-        MAIN_MENU, GAME, GAME_OVER;
+        MAIN_MENU, GAME, GAME_OVER, MISSION_COMPLETE
     }
 
+    private Stage stage;
     private Stage stageMenu;
     private Skin skinMenu;
-
     private Stage stageOver;
     private Skin skinOver;
-
-    Screen currentScreen = Screen.MAIN_MENU;
-
+    private Screen currentScreen = Screen.MAIN_MENU;
     private SpriteBatch batch;
-
     private Boat boat;
-
     private Island puertoRico;
     private Island america;
-
     private int health;
-
     private OrthographicCamera camera;
-
     private Array<Octopussy> octopussyArray;
     private long lastOctopussy;
-
     private Array<PirateBoat> pirateBoatArray;
     private long lastPirateBoat;
-
     private Array<Wave> waveArray;
     private long lastWave;
-
     private Music backgroundMusic;
     private int progress;
     private ShapeRenderer shapeRenderer;
-
 
     @Override
     public void create() {
@@ -75,6 +65,8 @@ public class WestSideAdventure extends ApplicationAdapter {
         boat.setBoatImage(new Texture("boat_green.png"));
         america = new Island(Constants.AMERICA_SPAWN_X, Constants.AMERICA_SPAWN_Y);
         america.setIslandImage(new Texture("america.png"));
+        america.getIsland().setWidth(1664);
+        america.getIsland().setHeight(1664);
 
         health = 3;
 
@@ -99,6 +91,10 @@ public class WestSideAdventure extends ApplicationAdapter {
             createGameOver();
         }
 
+        if (currentScreen == Screen.MISSION_COMPLETE) {
+            completeMission();
+        }
+
     }
 
 
@@ -115,7 +111,6 @@ public class WestSideAdventure extends ApplicationAdapter {
             boat.boatMovement();
 
             batch.begin();
-
 
             camera.position.set(boat.getBoat().getX() + progress, boat.getBoat().getY(), 0);
             camera.zoom = 1;
@@ -159,8 +154,12 @@ public class WestSideAdventure extends ApplicationAdapter {
                     break;
             }
 
-        System.out.println(boat.getBoat().x);
-        System.out.println(boat.getBoat().y);
+            if (boat.getBoat().overlaps(america.getIsland())) {
+                System.out.println("Mission complete");
+                currentScreen = Screen.MISSION_COMPLETE;
+                dispose();
+                create();
+            }
 
             if (progress > 0 && boat.getBoat().getX() > Constants.WORLD_WIDTH - 500) {
                 progress -= 25;
@@ -183,6 +182,14 @@ public class WestSideAdventure extends ApplicationAdapter {
             stageOver.act();
             stageOver.draw();
         }
+        if (currentScreen == Screen.MISSION_COMPLETE) {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            stage.act();
+            stage.draw();
+        }
+        System.out.println(america.getIsland().getHeight());
 
     }
 
@@ -421,5 +428,41 @@ public class WestSideAdventure extends ApplicationAdapter {
 
     }
 
+    private void completeMission(){
+        int buttonOffset = 20;
+
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage); // Make the stage consume events
+
+        Table table = new Table();
+        table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("mission-complete.png"))));
+        table.setFillParent(true);
+        table.setDebug(true);
+        stage.addActor(table);
+
+        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("tryAgain.png")));
+        ImageButton tryAgainBtn = new ImageButton(tryAgain);
+        tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 400, Gdx.graphics.getWidth() / 8 - 120);
+        tryAgainBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Play Game button clicked");
+                currentScreen = Screen.GAME;
+            }
+        });
+        stage.addActor(tryAgainBtn);
+
+        Drawable quit = new TextureRegionDrawable(new TextureRegion(new Texture("quitover.png")));
+        ImageButton quitBtn = new ImageButton(quit);
+        quitBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 - 120);
+        quitBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Exit button clicked");
+                System.exit(0);
+            }
+        });
+        stage.addActor(quitBtn);
+    }
 
 }

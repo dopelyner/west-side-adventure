@@ -17,8 +17,8 @@ public class Constants {
 
     public static final int PUERTO_RICO_SPAWN_X = -Constants.WORLD_WIDTH;
     public static final int PUERTO_RICO_SPAWN_Y = 1175;
-    public static final int AMERICA_SPAWN_X = Constants.WORLD_WIDTH;
-    public static final int AMERICA_SPAWN_Y = 1175;
+    public static final int AMERICA_SPAWN_X = Constants.WORLD_WIDTH - 800;
+    public static final int AMERICA_SPAWN_Y = Constants.WORLD_HEIGHT-1664;
 
 
 }
