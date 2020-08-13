@@ -2,11 +2,13 @@ package org.academiadecodigo.gitbusters.programazores;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -19,6 +21,12 @@ import org.academiadecodigo.gitbusters.programazores.menu.MainMenuScreen;
 import java.util.Iterator;
 
 public class WestSideAdventure extends ApplicationAdapter {
+
+    enum Screen{
+        TITLE, MAIN_GAME, GAME_OVER;
+    }
+
+    Screen currentScreen = Screen.MAIN_GAME;
 
     private SpriteBatch batch;
 
@@ -36,6 +44,8 @@ public class WestSideAdventure extends ApplicationAdapter {
     private long lastPirateBoat;
 
     private Music backgroundMusic;
+    private int progress;
+    private ShapeRenderer shapeRenderer;
 
     @Override
     public void create() {
@@ -55,54 +65,78 @@ public class WestSideAdventure extends ApplicationAdapter {
         octopussyArray = new Array<>();
         pirateBoatArray = new Array<>();
 
+        progress = 1320;
+
         //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BrosdasCaraibas_8bit.mp3"));
         // backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
 
     }
 
+
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0, 109 / 255.0f, 190 / 255.0f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.update(); //update our camera every frame
-        batch.setProjectionMatrix(camera.combined);
-        boat.boatMovement();
+        if(currentScreen == Screen.MAIN_GAME) {
+            Gdx.gl.glClearColor(0, 109/255.0f, 190/255.0f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
+            batch.setProjectionMatrix(camera.combined);
+            camera.update(); //update our camera every frame
+            batch.setProjectionMatrix(camera.combined);
+            boat.boatMovement();
 
-        camera.position.set(boat.getBoat().getX(), boat.getBoat().getY(), 0);
-        drawImages();
+            batch.begin();
 
-        //backgroundMusic.isLooping();
-        //backgroundMusic.play();
 
-        batch.end();
+            camera.position.set(boat.getBoat().getX() + progress, boat.getBoat().getY(), 0);
+            camera.zoom = 1;
+            camera.update();
+            batch.setProjectionMatrix(camera.combined);
 
-        if (TimeUtils.nanoTime() - lastOctopussy > 4000000000L) {
-            spawnOctopussies();
+            drawImages();
+            //backgroundMusic.isLooping();
+            //backgroundMusic.play();
+
+            batch.end();
+
+            if (TimeUtils.nanoTime() - lastOctopussy > 2000000000L) {
+                spawnOctopussies();
+            }
+
+            if (TimeUtils.nanoTime() - lastPirateBoat > 4000000000L) {
+                spawnPirateBoats();
+            }
+
+            octopussyCollisionsHandler();
+            piratesCollisionsHandler();
+
+            switch (health) {
+                case 0:
+                    System.out.println("GAME OVER BROTHER....");
+                    currentScreen = Screen.TITLE;
+                    dispose();
+                    create();   // future menu here
+                    boat.setBoatImage(new Texture("boat_green.png"));
+                    break;
+                case 1:
+                    boat.setBoatImage(new Texture("boat_red.png"));
+                    break;
+                case 2:
+                    boat.setBoatImage(new Texture("boat_yellow.png"));
+                    break;
+            }
+
+//        System.out.println(boat.getBoat().x);
+//        System.out.println(boat.getBoat().y);
+
+            if(progress > 0 && boat.getBoat().getX() > Constants.WORLD_WIDTH - 500) {
+                progress -= 25;
+            } // push final
+
         }
 
-        if (TimeUtils.nanoTime() - lastPirateBoat > 6000000000L) {
-            spawnPirateBoats();
-        }
-
-        octopussyCollisionsHandler();
-        piratesCollisionsHandler();
-
-        switch (health) {
-            case 0:
-                System.out.println("GAME OVER BROTHER....");
-                dispose();
-                create();   // future menu here
-                boat.setBoatImage(new Texture("boat_green.png"));
-                break;
-            case 1:
-                boat.setBoatImage(new Texture("boat_red.png"));
-                break;
-            case 2:
-                boat.setBoatImage(new Texture("boat_yellow.png"));
-                break;
+        if(currentScreen == Screen.TITLE) {
+            System.out.println("Main Menu");
         }
 
     }
@@ -130,8 +164,8 @@ public class WestSideAdventure extends ApplicationAdapter {
         Octopussy octo = new Octopussy();
         octo.setOctopussyImage(new Texture("octopussy.png"));
 
-        octo.getOctopussy().x = MathUtils.random(-1500, 1500);
-        octo.getOctopussy().y = MathUtils.random(-1500, 1500);
+        octo.getOctopussy().x = MathUtils.random(boat.getBoat().getX() -150);
+        octo.getOctopussy().y = MathUtils.random(0,boat.getBoat().getY() + 500);
 
         octopussyArray.add(octo);
         lastOctopussy = TimeUtils.nanoTime();
@@ -142,8 +176,8 @@ public class WestSideAdventure extends ApplicationAdapter {
         PirateBoat pirateBoat = new PirateBoat();
         pirateBoat.setPirateImage(new Texture("pirateboat.png"));
 
-        pirateBoat.getPirateBoat().x = MathUtils.random(-1500, 1500);
-        pirateBoat.getPirateBoat().y = MathUtils.random(-1500, 1500);
+        pirateBoat.getPirateBoat().x = MathUtils.random(Constants.WORLD_WIDTH);
+        pirateBoat.getPirateBoat().y = MathUtils.random(2160-1000,2160);
 
         pirateBoatArray.add(pirateBoat);
         lastPirateBoat = TimeUtils.nanoTime();
