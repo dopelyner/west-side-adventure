@@ -2,13 +2,12 @@ package org.academiadecodigo.gitbusters.programazores;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import org.academiadecodigo.gitbusters.programazores.boats.Boat;
@@ -23,7 +22,7 @@ public class WestSideAdventure extends ApplicationAdapter {
     private SpriteBatch batch;
 
     private Boat boat;
-    private Island island;
+    private Island puertoRico;
 
     private int health;
 
@@ -35,31 +34,34 @@ public class WestSideAdventure extends ApplicationAdapter {
     private Array<PirateBoat> pirateBoatArray;
     private long lastPirateBoat;
 
+    private Music backgroundMusic;
+
+
     @Override
     public void create() {
 
         batch = new SpriteBatch();
-
+        puertoRico = new Island();
+        puertoRico.setIslandImage(new Texture("puerto-rico.png"));
         boat = new Boat();
         boat.setBoatImage(new Texture("boat_green.png"));
 
-        island = new Island();
-        island.setDepartureIslandImage(new Texture("island.png"));
-
         health = 3;
 
-        // WORLD_WIDTH = 3600
-        // WORLD_HEIGTH = 2160
         camera = new OrthographicCamera(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
         //Viewport viewport = new ExtendViewport(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT, camera);
 
         octopussyArray = new Array<>();
         pirateBoatArray = new Array<>();
+
+        //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BrosdasCaraibas_8bit.mp3"));
+        //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
+
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0, 0, 255, 1);
+        Gdx.gl.glClearColor(0, 109/255.0f, 190/255.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update(); //update our camera every frame
@@ -71,13 +73,8 @@ public class WestSideAdventure extends ApplicationAdapter {
         camera.position.set(boat.getBoat().getX(), boat.getBoat().getY(), 0);
         drawImages();
 
-        for (Octopussy o : octopussyArray) {
-            batch.draw(o.getOctopussyImage(), o.getOctopussy().x, o.getOctopussy().y);
-        }
-
-        for (PirateBoat pirateBoat : pirateBoatArray) {
-            batch.draw(pirateBoat.getPirateImage(), pirateBoat.getPirateBoat().x, pirateBoat.getPirateBoat().y);
-        }
+        //backgroundMusic.isLooping();
+        //backgroundMusic.play();
 
         batch.end();
 
@@ -92,12 +89,11 @@ public class WestSideAdventure extends ApplicationAdapter {
         octopussyCollisionsHandler();
         piratesCollisionsHandler();
 
-
         switch (health) {
             case 0:
                 System.out.println("GAME OVER BROTHER....");
                 dispose();
-                create();
+                create();   // future menu here
                 boat.setBoatImage(new Texture("boat_green.png"));
                 break;
             case 1:
@@ -108,16 +104,27 @@ public class WestSideAdventure extends ApplicationAdapter {
                 break;
         }
 
+        System.out.println(boat.getBoat().x);
+        System.out.println(boat.getBoat().y);
     }
 
     @Override
     public void dispose() {
         batch.dispose();
+        //backgroundMusic.dispose();
     }
 
     private void drawImages() {
+        batch.draw(puertoRico.getIslandImage(), puertoRico.getIsland().x, puertoRico.getIsland().y);
         batch.draw(boat.getBoatImage(), boat.getBoat().getX(), boat.getBoat().y);
-        batch.draw(island.getDepartureIslandImage(), island.getDepartureIsland().x, island.getDepartureIsland().y);
+
+        for (Octopussy o : octopussyArray) {
+            batch.draw(o.getOctopussyImage(), o.getOctopussy().x, o.getOctopussy().y);
+        }
+
+        for (PirateBoat pirateBoat : pirateBoatArray) {
+            batch.draw(pirateBoat.getPirateImage(), pirateBoat.getPirateBoat().x, pirateBoat.getPirateBoat().y);
+        }
     }
 
     private void spawnOctopussies() {

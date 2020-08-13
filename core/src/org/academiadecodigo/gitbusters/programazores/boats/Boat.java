@@ -14,8 +14,8 @@ public class Boat {
 
     public Boat() {
         boat = new Rectangle();
-        boat.x = -1200;
-        boat.y = -850;
+        boat.x = Constants.BOAT_SPAWN_X;
+        boat.y = Constants.BOAT_SPAWN_Y;
         boat.width = 221;
         boat.height = 175;
     }
@@ -39,6 +39,10 @@ public class Boat {
 
         if (boat.x < -Constants.WORLD_WIDTH) {
             boat.x = -Constants.WORLD_WIDTH;
+        }
+
+        if (boat.x > Constants.WORLD_WIDTH) {
+            boat.x = Constants.WORLD_WIDTH;
         }
 
         if (boat.y > Constants.WORLD_HEIGHT - boat.height) {

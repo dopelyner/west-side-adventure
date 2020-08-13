@@ -2,27 +2,29 @@ package org.academiadecodigo.gitbusters.programazores.land;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import org.academiadecodigo.gitbusters.programazores.Constants;
 
 public class Island {
 
-    private Texture departureIslandImage;
-    private Rectangle departureIsland;
+    private Texture islandImage;
+    private Rectangle island;
 
     public Island(){
-        departureIsland = new Rectangle();
-        departureIsland.x = -1500;
-        departureIsland.y = -1000;
+        island = new Rectangle();
+        island.x = -Constants.WORLD_WIDTH;
+        island.y = 1175;
     }
 
-    public Rectangle getDepartureIsland() {
-        return departureIsland;
+    public Rectangle getIsland() {
+        return island;
     }
 
-    public Texture getDepartureIslandImage() {
-        return departureIslandImage;
+    public Texture getIslandImage() {
+        return islandImage;
     }
 
-    public void setDepartureIslandImage(Texture departureIslandImage) {
-        this.departureIslandImage = departureIslandImage;
+    public void setIslandImage(Texture islandImage) {
+        this.islandImage = islandImage;
     }
+
 }

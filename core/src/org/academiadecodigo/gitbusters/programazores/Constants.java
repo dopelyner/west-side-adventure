@@ -12,4 +12,10 @@ public class Constants {
     public static final int PIRATEBOAT_SPEED = 600;
     public static final int OCTOPUSSY_SPEED = 350;
 
+    public static final int BOAT_SPAWN_X = -3120;
+    public static final int BOAT_SPAWN_Y = 1829;
+
+
+
+
 }
