@@ -15,7 +15,7 @@ public class DesktopLauncher {
 		config.width = WIDTH;
 		config.height = HEIGHT;
 		config.title = "West Side Adventure";
-		//new LwjglApplication(new WestSideAdventure(), config);
-		new LwjglApplication(new MainMenuScreen(), config);
+		new LwjglApplication(new WestSideAdventure(), config);
+		//new LwjglApplication(new MainMenuScreen(), config);
 	}
 }

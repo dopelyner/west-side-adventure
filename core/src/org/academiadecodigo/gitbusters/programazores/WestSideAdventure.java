@@ -16,6 +16,7 @@ import org.academiadecodigo.gitbusters.programazores.enimies.Octopussy;
 import org.academiadecodigo.gitbusters.programazores.land.Island;
 import org.academiadecodigo.gitbusters.programazores.menu.MainMenuScreen;
 
+import java.sql.Time;
 import java.util.Iterator;
 
 public class WestSideAdventure extends ApplicationAdapter {
@@ -37,6 +38,10 @@ public class WestSideAdventure extends ApplicationAdapter {
 
     private Music backgroundMusic;
 
+    private Array<Wave> waveArray;
+    private long lastWave;
+
+
     @Override
     public void create() {
 
@@ -54,6 +59,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         octopussyArray = new Array<>();
         pirateBoatArray = new Array<>();
+        waveArray = new Array<>();
 
         //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BrosdasCaraibas_8bit.mp3"));
         // backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
@@ -87,8 +93,13 @@ public class WestSideAdventure extends ApplicationAdapter {
             spawnPirateBoats();
         }
 
+        if (TimeUtils.nanoTime() - lastWave > 1000000) {
+            spawnWaves();
+        }
+
         octopussyCollisionsHandler();
         piratesCollisionsHandler();
+        deleteWaves();
 
         switch (health) {
             case 0:
@@ -123,6 +134,10 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         for (PirateBoat pirateBoat : pirateBoatArray) {
             batch.draw(pirateBoat.getPirateImage(), pirateBoat.getPirateBoat().x, pirateBoat.getPirateBoat().y);
+        }
+
+        for (Wave wave : waveArray) {
+            batch.draw(wave.getWaveImage(), wave.getWave().x, wave.getWave().y);
         }
     }
 
@@ -185,7 +200,34 @@ public class WestSideAdventure extends ApplicationAdapter {
         }
     }
 
-    public SpriteBatch getBatch() {
-        return batch;
+    private void spawnWaves() {
+
+        Wave wave = new Wave();
+        wave.setWaveImage(new Texture("waves.png"));
+
+        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH, Constants.WORLD_WIDTH);
+        wave.getWave().y = MathUtils.random(-Constants.WORLD_HEIGHT, Constants.WORLD_HEIGHT);
+
+        waveArray.add(wave);
+        lastWave = TimeUtils.nanoTime();
     }
+
+    private void deleteWaves() {
+        for (Iterator<Wave> iter = waveArray.iterator(); iter.hasNext(); ) {
+            Wave wave = iter.next();
+            wave.waveMovement();
+
+            if (wave.getWave().x < -Constants.WORLD_HEIGHT) {
+                iter.remove();
+                wave.getWaveImage().dispose();
+            }
+
+            if (boat.getBoat().overlaps(wave.getWave())) {
+                iter.remove();
+                wave.getWaveImage().dispose();
+                System.out.println("Waveeeee");
+            }
+        }
+    }
+
 }
