@@ -237,7 +237,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         Wave wave = new Wave();
         wave.setWaveImage(new Texture("waves.png"));
 
-        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH, Constants.WORLD_WIDTH);
+        wave.getWave().x = MathUtils.random(-Constants.WORLD_WIDTH, Constants.WORLD_WIDTH - 70);
         wave.getWave().y = MathUtils.random(-Constants.WORLD_HEIGHT, Constants.WORLD_HEIGHT);
 
         waveArray.add(wave);
