@@ -59,7 +59,7 @@ public class WestSideAdventure extends ApplicationAdapter {
     private SandboxGame sandboxGame;
     private Array<SeaSerpente> seaSerpenteArray;
     private long lastSeaSerpente;
-    private int level ;
+    private int level;
 
     @Override
     public void create() {
@@ -91,12 +91,18 @@ public class WestSideAdventure extends ApplicationAdapter {
         //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
 
 
-        if (currentScreen == Screen.MAIN_MENU &&  level == 0) {
+        if (currentScreen == Screen.MAIN_MENU && level == 0) {
             boat.setBoatImage(new Texture("raft-green.png"));
             createMenu();
         }
-        if (currentScreen == Screen.GAME &&  level == 1) {
-            boat.setBoatImage(new Texture("boat_green.png"));
+        if (currentScreen == Screen.GAME && level == 1) {
+            boat.setBoatImage(new Texture("sailboat-green.png"));
+        }
+        if (currentScreen == Screen.GAME && level == 2) {
+            boat.setBoatImage(new Texture("motorboat-green.png"));
+        }
+        if (currentScreen == Screen.GAME && level == 3) {
+            boat.setBoatImage(new Texture("yatch-green.png"));
         }
 
         if (currentScreen == Screen.GAME_OVER) {
@@ -178,6 +184,16 @@ public class WestSideAdventure extends ApplicationAdapter {
                 create();
             }
             if (boat.getBoat().overlaps(america.getIsland()) && level == 1) {
+                level++;
+                dispose();
+                create();
+            }
+            if (boat.getBoat().overlaps(america.getIsland()) && level == 2) {
+                level++;
+                dispose();
+                create();
+            }
+            if (boat.getBoat().overlaps(america.getIsland()) && level == 3) {
                 test();
                 level++;
                 System.out.println("Mission complete");
@@ -247,6 +263,7 @@ public class WestSideAdventure extends ApplicationAdapter {
             mission2.draw();
         }
 
+        System.out.println("Level : " + level);
     }
 
     @Override
@@ -255,7 +272,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         //backgroundMusic.dispose();
     }
 
-    private void test(){
+    private void test() {
         switch (boat.getBoatImage() + "") {
             case "raft-green.png":
                 if (health == 2) {
@@ -328,8 +345,28 @@ public class WestSideAdventure extends ApplicationAdapter {
                 create();   // future menu here
                 boat.setBoatImage(new Texture("raft-green.png"));
                 break;
+
+            case "sailboat-green.png":
+                if (health == 2) {
+                    boat.setBoatImage(new Texture("sailboat-yellow.png"));
+                }
+                break;
+            case "sailboat-yellow.png":
+                if (health == 1) {
+                    boat.setBoatImage(new Texture("sailboat-red.png"));
+                }
+                break;
+            case "sailboat-red.png":
+                System.out.println("GAME OVER BROTHER....");
+                currentScreen = Screen.GAME_OVER;
+                dispose();
+                create();   // future menu here
+                boat.setBoatImage(new Texture("sailboat-green.png"));
+                break;
+
         }
     }
+
     private void drawImages() {
         batch.draw(puertoRico.getIslandImage(), puertoRico.getIsland().x, puertoRico.getIsland().y);
         batch.draw(boat.getBoatImage(), boat.getBoat().getX(), boat.getBoat().y);
@@ -582,6 +619,7 @@ public class WestSideAdventure extends ApplicationAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Play Game button clicked");
+                level = 0;
                 currentScreen = Screen.GAME;
             }
         });
@@ -634,6 +672,7 @@ public class WestSideAdventure extends ApplicationAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Play Game button clicked");
+                level = 0;
                 currentScreen = Screen.GAME;
             }
         });
