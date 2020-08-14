@@ -78,7 +78,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         health = 3;
 
         camera = new OrthographicCamera(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
-        //Viewport viewport = new ExtendViewport(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT, camera);
 
         octopussyArray = new Array<>();
         pirateBoatArray = new Array<>();
@@ -152,8 +151,8 @@ public class WestSideAdventure extends ApplicationAdapter {
             batch.setProjectionMatrix(camera.combined);
 
             drawImages();
-            //backgroundMusic.isLooping();
-            //backgroundMusic.play();
+            backgroundMusic.isLooping();
+            backgroundMusic.play();
 
             batch.end();
 
@@ -167,7 +166,7 @@ public class WestSideAdventure extends ApplicationAdapter {
             if (TimeUtils.nanoTime() - lastWave > 1000000) {
                 spawnWaves();
             }
-            if (TimeUtils.nanoTime() - lastSeaSerpente > 4000000000L) {
+            if (TimeUtils.nanoTime() - lastSeaSerpente > 400000000L) {
                 spawnSeaSerpentes();
             }
 
@@ -196,7 +195,6 @@ public class WestSideAdventure extends ApplicationAdapter {
             if (boat.getBoat().overlaps(america.getIsland()) && level == 3) {
                 test();
                 level++;
-                System.out.println("Mission complete");
                 currentScreen = Screen.MISSION_COMPLETE;
                 dispose();
                 create();
@@ -204,7 +202,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
             if (progress > 0 && boat.getBoat().getX() > Constants.WORLD_WIDTH - 500) {
                 progress -= 25;
-            } // push final
+            }
 
         }
 
@@ -262,14 +260,12 @@ public class WestSideAdventure extends ApplicationAdapter {
             mission2.act();
             mission2.draw();
         }
-
-        System.out.println("Level : " + level);
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        //backgroundMusic.dispose();
+        backgroundMusic.dispose();
     }
 
     private void test() {
@@ -371,8 +367,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         batch.draw(puertoRico.getIslandImage(), puertoRico.getIsland().x, puertoRico.getIsland().y);
         batch.draw(boat.getBoatImage(), boat.getBoat().getX(), boat.getBoat().y);
         batch.draw(america.getIslandImage(), america.getIsland().x, america.getIsland().y);
-        //sandboxGame.create();
-        //sandboxGame.render();
 
         for (Octopussy o : octopussyArray) {
             batch.draw(o.getOctopussyImage(), o.getOctopussy().x, o.getOctopussy().y);
@@ -422,7 +416,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         wave.getWave().y = MathUtils.random(-Constants.WORLD_HEIGHT, Constants.WORLD_HEIGHT);
 
         waveArray.add(wave);
-        lastPirateBoat = TimeUtils.nanoTime();
+        lastWave = TimeUtils.nanoTime();
     }
 
     private void spawnSeaSerpentes() {
@@ -465,7 +459,6 @@ public class WestSideAdventure extends ApplicationAdapter {
             if (boat.getBoat().overlaps(seaSerpente.getSeaSerpente())) {
                 health--;
                 iter.remove();
-                System.out.println("Crashed into an sea serpente");
             }
         }
     }
@@ -484,7 +477,6 @@ public class WestSideAdventure extends ApplicationAdapter {
             if (boat.getBoat().overlaps(octopussy.getOctopussy())) {
                 health--;
                 iter.remove();
-                System.out.println("Crashed into an octopussy");
             }
         }
     }
@@ -502,7 +494,6 @@ public class WestSideAdventure extends ApplicationAdapter {
             if (boat.getBoat().overlaps(pirateBoat.getPirateBoat())) {
                 health--;
                 iter.remove();
-                System.out.println("Crashed into a pirate boat");
             }
         }
     }
@@ -528,7 +519,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         playGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Play Game button clicked");
                 currentScreen = Screen.GAME;
             }
         });
@@ -543,7 +533,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         settingsBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Instructions button clicked");
                 currentScreen = Screen.INSTRUCTIONS;
                 dispose();
                 create();
@@ -559,7 +548,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         loreBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Lore button clicked");
                 currentScreen = Screen.LORE;
                 dispose();
                 create();
@@ -591,7 +579,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         exitBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Exit button clicked");
                 System.exit(0);
             }
         });
@@ -618,7 +605,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         tryAgainBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Play Game button clicked");
                 level = 0;
                 currentScreen = Screen.GAME;
             }
@@ -631,7 +617,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         quitBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Exit button clicked");
                 System.exit(0);
             }
         });
@@ -643,7 +628,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         menuBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("back to menu button clicked");
                 currentScreen = Screen.MAIN_MENU;
                 dispose();
                 create();
@@ -671,7 +655,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         tryAgainBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Play Game button clicked");
                 level = 0;
                 currentScreen = Screen.GAME;
             }
@@ -684,7 +667,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         quitBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Exit button clicked");
                 System.exit(0);
             }
         });
@@ -696,7 +678,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         menuBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("back to menu button clicked");
                 currentScreen = Screen.MAIN_MENU;
                 dispose();
                 create();
@@ -726,7 +707,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         tryAgainBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Lore button clicked");
                 currentScreen = Screen.MAIN_MENU;
                 dispose();
                 create();
@@ -755,7 +735,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         tryAgainBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Go button clicked");
                 currentScreen = Screen.MAIN_MENU;
                 dispose();
                 create();
@@ -784,7 +763,6 @@ public class WestSideAdventure extends ApplicationAdapter {
         tryAgainBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Go button clicked");
                 currentScreen = Screen.MAIN_MENU;
                 dispose();
                 create();
