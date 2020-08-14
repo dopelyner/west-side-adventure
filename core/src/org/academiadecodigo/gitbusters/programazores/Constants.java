@@ -5,7 +5,7 @@ public class Constants {
     public static final int WORLD_WIDTH = 3600;
     public static final int WORLD_HEIGHT = 2160;
 
-    public static final int BOAT_SPEED = 250;
+    public static final int BOAT_SPEED = 750;
     public static final int PIRATEBOAT_SPEED = 600;
     public static final int OCTOPUSSY_SPEED = 300;
     public static final int SEA_SERPENTE_SPEED = 400;

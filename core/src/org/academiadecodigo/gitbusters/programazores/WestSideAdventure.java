@@ -59,6 +59,7 @@ public class WestSideAdventure extends ApplicationAdapter {
     private SandboxGame sandboxGame;
     private Array<SeaSerpente> seaSerpenteArray;
     private long lastSeaSerpente;
+    private int level ;
 
     @Override
     public void create() {
@@ -68,7 +69,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         puertoRico.setIslandImage(new Texture("puerto-rico.png"));
 
         boat = new Boat();
-
+        boat.setBoatImage(new Texture("raft-green.png"));
         america = new Island(Constants.AMERICA_SPAWN_X, Constants.AMERICA_SPAWN_Y);
         america.setIslandImage(new Texture("america.png"));
         america.getIsland().setWidth(1664);
@@ -90,9 +91,12 @@ public class WestSideAdventure extends ApplicationAdapter {
         //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Bros_Das_Caraibas.mp3"));
 
 
-        if (currentScreen == Screen.MAIN_MENU) {
+        if (currentScreen == Screen.MAIN_MENU &&  level == 0) {
             boat.setBoatImage(new Texture("raft-green.png"));
             createMenu();
+        }
+        if (currentScreen == Screen.GAME &&  level == 1) {
+            boat.setBoatImage(new Texture("boat_green.png"));
         }
 
         if (currentScreen == Screen.GAME_OVER) {
@@ -166,81 +170,16 @@ public class WestSideAdventure extends ApplicationAdapter {
             seaSerpenteCollisionsHandler();
             deleteWaves();
 
-            switch (boat.getBoatImage() + "") {
-                case "raft-green.png":
-                    if (health == 2) {
-                        boat.setBoatImage(new Texture("raft-yellow.png"));
-                    }
-                    break;
-                case "raft-yellow.png":
-                    if (health == 1) {
-                        boat.setBoatImage(new Texture("raft-red.png"));
-                    }
-                    break;
-                case "raft-red.png":
-                    System.out.println("GAME OVER BROTHER....");
-                    currentScreen = Screen.GAME_OVER;
-                    dispose();
-                    create();   // future menu here
-                    boat.setBoatImage(new Texture("raft-green.png"));
-                    break;
+            test();
 
-                case "boat_green.png":
-                    if (health == 2) {
-                        boat.setBoatImage(new Texture("boat_yellow.png"));
-                    }
-                    break;
-                case "boat_yellow.png":
-                    if (health == 1) {
-                        boat.setBoatImage(new Texture("boat_red.png"));
-                    }
-                    break;
-                case "boat_red.png":
-                    System.out.println("GAME OVER BROTHER....");
-                    currentScreen = Screen.GAME_OVER;
-                    dispose();
-                    create();   // future menu here
-                    boat.setBoatImage(new Texture("raft-green.png"));
-                    break;
-
-                case "motorboat-green.png":
-                    if (health == 2) {
-                        boat.setBoatImage(new Texture("motorboat-yellow.png"));
-                    }
-                    break;
-                case "motorboat-yellow.png":
-                    if (health == 1) {
-                        boat.setBoatImage(new Texture("motorboat-red.png"));
-                    }
-                    break;
-                case "motorboat-red.png":
-                    System.out.println("GAME OVER BROTHER....");
-                    currentScreen = Screen.GAME_OVER;
-                    dispose();
-                    create();   // future menu here
-                    boat.setBoatImage(new Texture("raft-green.png"));
-                    break;
-
-                case "yatch-green.png":
-                    if (health == 2) {
-                        boat.setBoatImage(new Texture("yatch-yellow.png"));
-                    }
-                    break;
-                case "yatch-yellow.png":
-                    if (health == 1) {
-                        boat.setBoatImage(new Texture("yatch-red.png"));
-                    }
-                    break;
-                case "yatch-red.png":
-                    System.out.println("GAME OVER BROTHER....");
-                    currentScreen = Screen.GAME_OVER;
-                    dispose();
-                    create();   // future menu here
-                    boat.setBoatImage(new Texture("raft-green.png"));
-                    break;
+            if (boat.getBoat().overlaps(america.getIsland()) && level == 0) {
+                level++;
+                dispose();
+                create();
             }
-
-            if (boat.getBoat().overlaps(america.getIsland())) {
+            if (boat.getBoat().overlaps(america.getIsland()) && level == 1) {
+                test();
+                level++;
                 System.out.println("Mission complete");
                 currentScreen = Screen.MISSION_COMPLETE;
                 dispose();
@@ -316,6 +255,81 @@ public class WestSideAdventure extends ApplicationAdapter {
         //backgroundMusic.dispose();
     }
 
+    private void test(){
+        switch (boat.getBoatImage() + "") {
+            case "raft-green.png":
+                if (health == 2) {
+                    boat.setBoatImage(new Texture("raft-yellow.png"));
+                }
+                break;
+            case "raft-yellow.png":
+                if (health == 1) {
+                    boat.setBoatImage(new Texture("raft-red.png"));
+                }
+                break;
+            case "raft-red.png":
+                System.out.println("GAME OVER BROTHER....");
+                currentScreen = Screen.GAME_OVER;
+                dispose();
+                create();   // future menu here
+                boat.setBoatImage(new Texture("raft-green.png"));
+                break;
+
+            case "boat_green.png":
+                if (health == 2) {
+                    boat.setBoatImage(new Texture("boat_yellow.png"));
+                }
+                break;
+            case "boat_yellow.png":
+                if (health == 1) {
+                    boat.setBoatImage(new Texture("boat_red.png"));
+                }
+                break;
+            case "boat_red.png":
+                System.out.println("GAME OVER BROTHER....");
+                currentScreen = Screen.GAME_OVER;
+                dispose();
+                create();   // future menu here
+                boat.setBoatImage(new Texture("raft-green.png"));
+                break;
+
+            case "motorboat-green.png":
+                if (health == 2) {
+                    boat.setBoatImage(new Texture("motorboat-yellow.png"));
+                }
+                break;
+            case "motorboat-yellow.png":
+                if (health == 1) {
+                    boat.setBoatImage(new Texture("motorboat-red.png"));
+                }
+                break;
+            case "motorboat-red.png":
+                System.out.println("GAME OVER BROTHER....");
+                currentScreen = Screen.GAME_OVER;
+                dispose();
+                create();   // future menu here
+                boat.setBoatImage(new Texture("raft-green.png"));
+                break;
+
+            case "yatch-green.png":
+                if (health == 2) {
+                    boat.setBoatImage(new Texture("yatch-yellow.png"));
+                }
+                break;
+            case "yatch-yellow.png":
+                if (health == 1) {
+                    boat.setBoatImage(new Texture("yatch-red.png"));
+                }
+                break;
+            case "yatch-red.png":
+                System.out.println("GAME OVER BROTHER....");
+                currentScreen = Screen.GAME_OVER;
+                dispose();
+                create();   // future menu here
+                boat.setBoatImage(new Texture("raft-green.png"));
+                break;
+        }
+    }
     private void drawImages() {
         batch.draw(puertoRico.getIslandImage(), puertoRico.getIsland().x, puertoRico.getIsland().y);
         batch.draw(boat.getBoatImage(), boat.getBoat().getX(), boat.getBoat().y);
