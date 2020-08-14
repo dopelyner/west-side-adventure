@@ -27,9 +27,10 @@ public class WestSideAdventure extends ApplicationAdapter {
 
 
     enum Screen {
-        MAIN_MENU, GAME, GAME_OVER, LORE, CREDITS, MISSION_COMPLETE;
+        MAIN_MENU, GAME, GAME_OVER, LORE, CREDITS, MISSION_COMPLETE, MISSION_2
     }
 
+    private Stage mission2;
     private Stage stage;
     private Stage stageMenu;
     private Skin skinMenu;
@@ -55,6 +56,7 @@ public class WestSideAdventure extends ApplicationAdapter {
     private Music backgroundMusic;
     private int progress;
     private ShapeRenderer shapeRenderer;
+    private SandboxGame sandboxGame;
 
     @Override
     public void create() {
@@ -64,7 +66,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         puertoRico.setIslandImage(new Texture("puerto-rico.png"));
 
         boat = new Boat();
-        boat.setBoatImage(new Texture("boat_green.png"));
+
         america = new Island(Constants.AMERICA_SPAWN_X, Constants.AMERICA_SPAWN_Y);
         america.setIslandImage(new Texture("america.png"));
         america.getIsland().setWidth(1664);
@@ -86,6 +88,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
 
         if (currentScreen == Screen.MAIN_MENU) {
+            boat.setBoatImage(new Texture("yatch-green.png"));
             createMenu();
         }
 
@@ -104,7 +107,10 @@ public class WestSideAdventure extends ApplicationAdapter {
         if (currentScreen == Screen.CREDITS) {
             createCredits();
         }
-
+        if (currentScreen == Screen.MISSION_2) {
+            mission2();
+        }
+        sandboxGame = new SandboxGame();
     }
 
 
@@ -133,7 +139,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
             batch.end();
 
-            if (TimeUtils.nanoTime() - lastOctopussy > 2000000000L) {
+            if (TimeUtils.nanoTime() - lastOctopussy > 300000000L) {
                 spawnOctopussies();
             }
 
@@ -148,6 +154,8 @@ public class WestSideAdventure extends ApplicationAdapter {
             piratesCollisionsHandler();
             deleteWaves();
 
+            System.out.println(boat.getBoatImage());
+            /*
             switch (health) {
                 case 0:
                     System.out.println("GAME OVER BROTHER....");
@@ -161,6 +169,80 @@ public class WestSideAdventure extends ApplicationAdapter {
                     break;
                 case 2:
                     boat.setBoatImage(new Texture("boat_yellow.png"));
+                    break;
+            }*/
+
+            switch (boat.getBoatImage() + "") {
+                case "raft-green.png":
+                    if (health == 2) {
+                        boat.setBoatImage(new Texture("raft-yellow.png"));
+                    }
+                    break;
+                case "raft-yellow.png":
+                    if (health == 1) {
+                        boat.setBoatImage(new Texture("raft-red.png"));
+                    }
+                    break;
+                case "raft-red.png":
+                    System.out.println("GAME OVER BROTHER....");
+                    currentScreen = Screen.GAME_OVER;
+                    dispose();
+                    create();   // future menu here
+                    boat.setBoatImage(new Texture("raft-green.png"));
+                    break;
+
+                case "boat_green.png":
+                    if (health == 2) {
+                        boat.setBoatImage(new Texture("boat_yellow.png"));
+                    }
+                    break;
+                case "boat_yellow.png":
+                    if (health == 1) {
+                        boat.setBoatImage(new Texture("boat_red.png"));
+                    }
+                    break;
+                case "boat_red.png":
+                    System.out.println("GAME OVER BROTHER....");
+                    currentScreen = Screen.GAME_OVER;
+                    dispose();
+                    create();   // future menu here
+                    boat.setBoatImage(new Texture("raft-green.png"));
+                    break;
+
+                case "motorboat-green.png":
+                    if (health == 2) {
+                        boat.setBoatImage(new Texture("motorboat-yellow.png"));
+                    }
+                    break;
+                case "motorboat-yellow.png":
+                    if (health == 1) {
+                        boat.setBoatImage(new Texture("motorboat-red.png"));
+                    }
+                    break;
+                case "motorboat-red.png":
+                    System.out.println("GAME OVER BROTHER....");
+                    currentScreen = Screen.GAME_OVER;
+                    dispose();
+                    create();   // future menu here
+                    boat.setBoatImage(new Texture("raft-green.png"));
+                    break;
+
+                case "yatch-green.png":
+                    if (health == 2) {
+                        boat.setBoatImage(new Texture("yatch-yellow.png"));
+                    }
+                    break;
+                case "yatch-yellow.png":
+                    if (health == 1) {
+                        boat.setBoatImage(new Texture("yatch-red.png"));
+                    }
+                    break;
+                case "yatch-red.png":
+                    System.out.println("GAME OVER BROTHER....");
+                    currentScreen = Screen.GAME_OVER;
+                    dispose();
+                    create();   // future menu here
+                    boat.setBoatImage(new Texture("raft-green.png"));
                     break;
             }
 
@@ -217,6 +299,15 @@ public class WestSideAdventure extends ApplicationAdapter {
             stageCredits.draw();
         }
 
+        if (currentScreen == Screen.MISSION_2) {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            mission2.act();
+            mission2.draw();
+        }
+
+
     }
 
     @Override
@@ -229,6 +320,8 @@ public class WestSideAdventure extends ApplicationAdapter {
         batch.draw(puertoRico.getIslandImage(), puertoRico.getIsland().x, puertoRico.getIsland().y);
         batch.draw(boat.getBoatImage(), boat.getBoat().getX(), boat.getBoat().y);
         batch.draw(america.getIslandImage(), america.getIsland().x, america.getIsland().y);
+        //sandboxGame.create();
+        //sandboxGame.render();
 
         for (Octopussy o : octopussyArray) {
             batch.draw(o.getOctopussyImage(), o.getOctopussy().x, o.getOctopussy().y);
@@ -297,7 +390,8 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         for (Iterator<Octopussy> iter = octopussyArray.iterator(); iter.hasNext(); ) {
             Octopussy octopussy = iter.next();
-            octopussy.octopussyMovement();
+
+            octopussy.octopussyMovementDown();
 
             if (octopussy.getOctopussy().y > Constants.WORLD_HEIGHT) {
                 iter.remove();
@@ -541,4 +635,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         stageCredits.addActor(tryAgainBtn);
     }
 
+    private void mission2() {
+
+    }
 }

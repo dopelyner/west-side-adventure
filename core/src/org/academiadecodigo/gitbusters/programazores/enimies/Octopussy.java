@@ -18,8 +18,11 @@ public class Octopussy {
         octopussy.height = 50;
     }
 
-    public void octopussyMovement() {
+    public void octopussyMovementDown() {
         octopussy.y -= Constants.OCTOPUSSY_SPEED * Gdx.graphics.getDeltaTime();
+    }
+    public void octopussyMovementUp() {
+        octopussy.y += Constants.OCTOPUSSY_SPEED * Gdx.graphics.getDeltaTime();
     }
 
     public Rectangle getOctopussy() {
