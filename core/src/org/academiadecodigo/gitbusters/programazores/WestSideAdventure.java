@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import org.academiadecodigo.gitbusters.programazores.boats.Boat;
 import org.academiadecodigo.gitbusters.programazores.boats.PirateBoat;
 import org.academiadecodigo.gitbusters.programazores.enimies.Octopussy;
+import org.academiadecodigo.gitbusters.programazores.enimies.SeaSerpente;
 import org.academiadecodigo.gitbusters.programazores.land.Island;
 
 import java.util.Iterator;
@@ -56,6 +57,8 @@ public class WestSideAdventure extends ApplicationAdapter {
     private int progress;
     private ShapeRenderer shapeRenderer;
     private SandboxGame sandboxGame;
+    private Array<SeaSerpente> seaSerpenteArray;
+    private long lastSeaSerpente;
 
     @Override
     public void create() {
@@ -79,6 +82,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         octopussyArray = new Array<>();
         pirateBoatArray = new Array<>();
         waveArray = new Array<>();
+        seaSerpenteArray = new Array<>();
 
         progress = 1320;
 
@@ -87,7 +91,7 @@ public class WestSideAdventure extends ApplicationAdapter {
 
 
         if (currentScreen == Screen.MAIN_MENU) {
-            boat.setBoatImage(new Texture("yatch-green.png"));
+            boat.setBoatImage(new Texture("raft-green.png"));
             createMenu();
         }
 
@@ -111,7 +115,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         }
         sandboxGame = new SandboxGame();
 
-        if(currentScreen == Screen.INSTRUCTIONS) {
+        if (currentScreen == Screen.INSTRUCTIONS) {
             createInstructions();
         }
 
@@ -147,34 +151,20 @@ public class WestSideAdventure extends ApplicationAdapter {
                 spawnOctopussies();
             }
 
-            if (TimeUtils.nanoTime() - lastPirateBoat > 4000000000L) {
+            if (TimeUtils.nanoTime() - lastPirateBoat > 2000000000L) {
                 spawnPirateBoats();
             }
             if (TimeUtils.nanoTime() - lastWave > 1000000) {
                 spawnWaves();
             }
+            if (TimeUtils.nanoTime() - lastSeaSerpente > 4000000000L) {
+                spawnSeaSerpentes();
+            }
 
             octopussyCollisionsHandler();
             piratesCollisionsHandler();
+            seaSerpenteCollisionsHandler();
             deleteWaves();
-
-            System.out.println(boat.getBoatImage());
-            /*
-            switch (health) {
-                case 0:
-                    System.out.println("GAME OVER BROTHER....");
-                    currentScreen = Screen.GAME_OVER;
-                    dispose();
-                    create();   // future menu here
-                    boat.setBoatImage(new Texture("boat_green.png"));
-                    break;
-                case 1:
-                    boat.setBoatImage(new Texture("boat_red.png"));
-                    break;
-                case 2:
-                    boat.setBoatImage(new Texture("boat_yellow.png"));
-                    break;
-            }*/
 
             switch (boat.getBoatImage() + "") {
                 case "raft-green.png":
@@ -285,7 +275,6 @@ public class WestSideAdventure extends ApplicationAdapter {
             stage.act();
             stage.draw();
         }
-        System.out.println(america.getIsland().getHeight());
 
         if (currentScreen == Screen.LORE) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -303,7 +292,7 @@ public class WestSideAdventure extends ApplicationAdapter {
             stageIns.draw();
         }
 
-        if(currentScreen == Screen.INSTRUCTIONS) {
+        if (currentScreen == Screen.INSTRUCTIONS) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -318,7 +307,6 @@ public class WestSideAdventure extends ApplicationAdapter {
             mission2.act();
             mission2.draw();
         }
-
 
     }
 
@@ -346,11 +334,15 @@ public class WestSideAdventure extends ApplicationAdapter {
         for (Wave wave : waveArray) {
             batch.draw(wave.getWaveImage(), wave.getWave().x, wave.getWave().y);
         }
+
+        for (SeaSerpente seaSerpente : seaSerpenteArray) {
+            batch.draw(seaSerpente.getSeaSerpenteImage(), seaSerpente.getSeaSerpente().x, seaSerpente.getSeaSerpente().y);
+        }
     }
 
     private void spawnOctopussies() {
         Octopussy octo = new Octopussy();
-        octo.setOctopussyImage(new Texture("octopussy.png"));
+        octo.setOctopussyImage(new Texture("kraken.png"));
 
         octo.getOctopussy().x = MathUtils.random(boat.getBoat().getX() - 150);
         octo.getOctopussy().y = MathUtils.random(0, boat.getBoat().getY() + 500);
@@ -364,7 +356,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         PirateBoat pirateBoat = new PirateBoat();
         pirateBoat.setPirateImage(new Texture("pirateboat.png"));
 
-        pirateBoat.getPirateBoat().x = MathUtils.random(Constants.WORLD_WIDTH);
+        pirateBoat.getPirateBoat().x = MathUtils.random(-Constants.WORLD_WIDTH, Constants.WORLD_WIDTH);
         pirateBoat.getPirateBoat().y = MathUtils.random(2160 - 1000, 2160);
 
         pirateBoatArray.add(pirateBoat);
@@ -382,6 +374,17 @@ public class WestSideAdventure extends ApplicationAdapter {
         lastPirateBoat = TimeUtils.nanoTime();
     }
 
+    private void spawnSeaSerpentes() {
+        SeaSerpente seaSerpente = new SeaSerpente();
+        seaSerpente.setSeaSerpenteImage(new Texture("sea-serpente.png"));
+
+        seaSerpente.getSeaSerpente().x = MathUtils.random(Constants.WORLD_WIDTH);
+        seaSerpente.getSeaSerpente().y = MathUtils.random(2160 - 1000, 2160);
+
+        seaSerpenteArray.add(seaSerpente);
+        lastSeaSerpente = TimeUtils.nanoTime();
+    }
+
     private void deleteWaves() {
         for (Iterator<Wave> iter = waveArray.iterator(); iter.hasNext(); ) {
             Wave wave = iter.next();
@@ -394,6 +397,24 @@ public class WestSideAdventure extends ApplicationAdapter {
 
             if (boat.getBoat().overlaps(wave.getWave())) {
                 iter.remove();
+            }
+        }
+    }
+
+    private void seaSerpenteCollisionsHandler() {
+        for (Iterator<SeaSerpente> iter = seaSerpenteArray.iterator(); iter.hasNext(); ) {
+            SeaSerpente seaSerpente = iter.next();
+
+            seaSerpente.setSeaSerpenteMovement();
+
+            if (seaSerpente.getSeaSerpente().x > Constants.WORLD_WIDTH - 400) {
+                iter.remove();
+            }
+
+            if (boat.getBoat().overlaps(seaSerpente.getSeaSerpente())) {
+                health--;
+                iter.remove();
+                System.out.println("Crashed into an sea serpente");
             }
         }
     }
@@ -423,7 +444,7 @@ public class WestSideAdventure extends ApplicationAdapter {
             PirateBoat pirateBoat = iter.next();
             pirateBoat.pirateMovement();
 
-            if (pirateBoat.getPirateBoat().y > Constants.WORLD_HEIGHT) {
+            if (pirateBoat.getPirateBoat().x < -Constants.WORLD_WIDTH) {
                 iter.remove();
             }
 
@@ -442,7 +463,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stageMenu); // Make the stage consume events
 
         Table table = new Table();
-        table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("background-menu.png"))));
+        table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("background-menu2.png"))));
         table.setFillParent(true);
         table.setDebug(true);
         stageMenu.addActor(table);
@@ -450,7 +471,9 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         Drawable play = new TextureRegionDrawable(new TextureRegion(new Texture("play-button.png")));
         ImageButton playGameBtn = new ImageButton(play);
-        playGameBtn.setPosition(Gdx.graphics.getWidth() / 2 - 250, Gdx.graphics.getWidth() / 8 + 20 + 100);
+        play.setMinWidth(250);
+        play.setMinHeight(60);
+        playGameBtn.setPosition(Gdx.graphics.getWidth() / 2 - 250, Gdx.graphics.getWidth() / 8 + 100);
         playGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -463,7 +486,9 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         Drawable settings = new TextureRegionDrawable(new TextureRegion(new Texture("instructions-button.png")));
         ImageButton settingsBtn = new ImageButton(settings);
-        settingsBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 - 3);
+        settings.setMinWidth(250);
+        settings.setMinHeight(60);
+        settingsBtn.setPosition(Gdx.graphics.getWidth() / 2 - 105, Gdx.graphics.getWidth() / 8 + 18);
         settingsBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -477,7 +502,9 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         Drawable lore = new TextureRegionDrawable(new TextureRegion(new Texture("lore-button.png")));
         ImageButton loreBtn = new ImageButton(lore);
-        loreBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8);
+        lore.setMinWidth(250);
+        lore.setMinHeight(60);
+        loreBtn.setPosition(Gdx.graphics.getWidth() / 2 - 375, Gdx.graphics.getWidth() / 8 + 20);
         loreBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -491,7 +518,9 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         Drawable shop = new TextureRegionDrawable(new TextureRegion(new Texture("creditsbtn.png")));
         ImageButton shopBtn = new ImageButton(shop);
-        shopBtn.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getWidth() / 8 - 120);
+        shop.setMinWidth(250);
+        shop.setMinHeight(60);
+        shopBtn.setPosition(Gdx.graphics.getWidth() / 2 - 375, Gdx.graphics.getWidth() / 8 - 60);
         shopBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -505,7 +534,9 @@ public class WestSideAdventure extends ApplicationAdapter {
 
         Drawable exit = new TextureRegionDrawable(new TextureRegion(new Texture("exit-button.png")));
         ImageButton exitBtn = new ImageButton(exit);
-        exitBtn.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getWidth() / 8 - 120);
+        exit.setMinWidth(250);
+        exit.setMinHeight(60);
+        exitBtn.setPosition(Gdx.graphics.getWidth() / 2 - 105, Gdx.graphics.getWidth() / 8 - 60);
         exitBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -680,7 +711,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         stageIns.addActor(tryAgainBtn);
     }
 
-    private void createInstructions(){
+    private void createInstructions() {
         int buttonOffset = 20;
 
         stageIns = new Stage();
