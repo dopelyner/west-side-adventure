@@ -436,7 +436,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         table.setDebug(true);
         stageOver.addActor(table);
 
-        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("tryAgain.png")));
+        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("tryagain-r.png")));
         ImageButton tryAgainBtn = new ImageButton(tryAgain);
         tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 580, Gdx.graphics.getWidth() / 8 - 120);
         tryAgainBtn.addListener(new ClickListener() {
@@ -488,7 +488,7 @@ public class WestSideAdventure extends ApplicationAdapter {
         table.setDebug(true);
         stage.addActor(table);
 
-        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("tryAgain.png")));
+        Drawable tryAgain = new TextureRegionDrawable(new TextureRegion(new Texture("tryagain-r.png")));
         ImageButton tryAgainBtn = new ImageButton(tryAgain);
         tryAgainBtn.setPosition(Gdx.graphics.getWidth() / 2 - 580, Gdx.graphics.getWidth() / 8 - 120);
         tryAgainBtn.addListener(new ClickListener() {
