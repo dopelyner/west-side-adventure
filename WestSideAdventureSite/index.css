@@ -1,0 +1,68 @@
+h1 {
+  font: bold;
+  text-align: center;
+  /*font-family: 'Ubuntu', sans-serif;*/
+  font-family: "Fredoka One", cursive;
+  font-size: 550%;
+}
+
+#info {
+  font-family: "Ubuntu", sans-serif;
+  text-align: center;
+  color: red;
+}
+
+body {
+  background-image: url(database/portorico3.jpeg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+#facebook {
+
+    display: inline-block;
+  text-align: center;
+}
+
+#github {
+    left:25px;
+    display: inline-block;
+  text-align: left;
+}
+
+#paypal1 {
+
+    display: inline-block; 
+    text-align: right;
+
+   
+    width: 150px;
+    height: 38px;
+ 
+}
+
+.container2{
+    text-align: center;
+    display: inline;
+}
+.jumbotron{
+    color: black;
+}
+.jumbotron h1{
+   color: #cd8500;
+}
+.jumbotron p{
+    font-size: 150%;
+}
+
+.container2{
+    left:25px;
+    width: 100%;
+    display: inline-block;
+}
+#facebook img {
+    height: 50px;
+    width: 50px;
+    size: 200px;
+}
